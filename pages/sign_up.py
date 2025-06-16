@@ -36,7 +36,13 @@ class SignUp:
         self.sign_up_text_ID = (By.XPATH, '//h2[text()="New User Signup!"]')
         self.signed_up_info_ID = (By.CSS_SELECTOR, ".title.text-center")
         self.continue_button_ID = (By.CSS_SELECTOR, ".btn.btn-primary")
-        self.delete_account_link_ID = (By.CSS_SELECTOR, 'button[data-qa=""]')
+        self.delete_account_link_ID = (By.XPATH, '//a[@href="/delete_account"]')
+        self.logout_button_ID = (By.XPATH, '//a[@href="/logout"]')
+        self.login_email_field_ID = (By.CSS_SELECTOR, 'input[data-qa="login-email"]')
+        self.login_password_field_ID = (By.NAME, "password")
+        self.login_button_ID = (By.CSS_SELECTOR, '.btn.btn-default')
+        self.login_info_ID = (By.CSS_SELECTOR, ".fa.fa-user")
+        self.existing_email_used_ID = (By.XPATH, 'p[text()="Email Address already exist!"]')
 
     def select_sign_up_link(self):
         element = WebDriverWait(self.driver, WAIT).until(
@@ -116,6 +122,30 @@ class SignUp:
             EC.element_to_be_clickable(self.continue_button_ID)
         )
         continue_button.click()
+
+    def delete_account(self):
+        delete_account_link = WebDriverWait(self.driver, WAIT).until(
+            EC.presence_of_element_located(self.delete_account_link_ID)
+        )
+        delete_account_link.click()
+
+    def logout(self):
+        logout_button = WebDriverWait(self.driver, WAIT).until(
+            EC.presence_of_element_located(self.logout_button_ID)
+        )
+        logout_button.click()
+
+    def login(self, email, password):
+        email_field = WebDriverWait(self.driver, WAIT).until(
+            EC.presence_of_element_located(self.login_email_field_ID)
+        )
+        password_field = self.driver.find_element(*self.login_password_field_ID)
+
+        email_field.send_keys(email)
+        password_field.send_keys(password)
+        
+        login_button = self.driver.find_element(*self.login_button_ID)
+        login_button.click()
 
     def header_visibility(self, locator):
         return WebDriverWait(self.driver, WAIT).until(
